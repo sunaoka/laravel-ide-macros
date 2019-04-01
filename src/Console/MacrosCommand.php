@@ -14,37 +14,37 @@ class MacrosCommand extends Command
 
     /** @var array Laravel classes with Macroable support */
     protected $classes = [
-        '\Illuminate\Database\Schema\Blueprint',
-        '\Illuminate\Support\Arr',
-        '\Illuminate\Support\Carbon',
-        '\Carbon\Carbon',
-        '\Carbon\CarbonImmutable',
-        '\Carbon\CarbonInterval',
-        '\Carbon\CarbonPeriod',
-        '\Illuminate\Support\Collection',
-        '\Illuminate\Console\Scheduling\Event',
-        '\Illuminate\Database\Eloquent\FactoryBuilder',
-        '\Illuminate\Filesystem\Filesystem',
-        '\Illuminate\Mail\Mailer',
-        '\Illuminate\Foundation\Console\PresetCommand',
-        '\Illuminate\Routing\Redirector',
-        '\Illuminate\Database\Eloquent\Relations\Relation',
-        '\Illuminate\Cache\Repository',
-        '\Illuminate\Routing\ResponseFactory',
-        '\Illuminate\Routing\Route',
-        '\Illuminate\Routing\Router',
-        '\Illuminate\Validation\Rule',
-        '\Illuminate\Support\Str',
-        '\Illuminate\Foundation\Testing\TestResponse',
-        '\Illuminate\Translation\Translator',
-        '\Illuminate\Routing\UrlGenerator',
-        '\Illuminate\Database\Query\Builder',
-        '\Illuminate\Http\JsonResponse',
-        '\Illuminate\Http\RedirectResponse',
-        '\Illuminate\Auth\RequestGuard',
-        '\Illuminate\Http\Response',
-        '\Illuminate\Auth\SessionGuard',
-        '\Illuminate\Http\UploadedFile',
+        \Illuminate\Auth\RequestGuard::class,
+        \Illuminate\Auth\SessionGuard::class,
+        \Illuminate\Cache\Repository::class,
+        \Illuminate\Console\Command::class,
+        \Illuminate\Console\Scheduling\Event::class,
+        \Illuminate\Database\Grammar::class,
+        \Illuminate\Database\Eloquent\FactoryBuilder::class,
+        \Illuminate\Database\Eloquent\Relations\Relation::class,
+        \Illuminate\Database\Query\Builder::class,
+        \Illuminate\Database\Schema\Blueprint::class,
+        \Illuminate\Filesystem\Filesystem::class,
+        \Illuminate\Foundation\Testing\TestResponse::class,
+        \Illuminate\Http\JsonResponse::class,
+        \Illuminate\Http\RedirectResponse::class,
+        \Illuminate\Http\Request::class,
+        \Illuminate\Http\Response::class,
+        \Illuminate\Http\UploadedFile::class,
+        \Illuminate\Mail\Mailer::class,
+        \Illuminate\Routing\Redirector::class,
+        \Illuminate\Routing\ResponseFactory::class,
+        \Illuminate\Routing\Route::class,
+        \Illuminate\Routing\Router::class,
+        \Illuminate\Routing\UrlGenerator::class,
+        \Illuminate\Support\Arr::class,
+        \Illuminate\Support\Carbon::class,
+        \Illuminate\Support\Collection::class,
+        \Illuminate\Support\Optional::class,
+        \Illuminate\Support\Str::class,
+        \Illuminate\Translation\Translator::class,
+        \Illuminate\Validation\Rule::class,
+        \Illuminate\View\View::class,
     ];
 
     /** @var resource */
@@ -89,6 +89,7 @@ class MacrosCommand extends Command
             $this->generateNamespace($reflection->getNamespaceName(), function () use ($macros, $reflection) {
                 $this->generateClass($reflection->getShortName(), function () use ($macros) {
                     foreach ($macros as $name => $macro) {
+
                         if (is_array($macro)) {
                             list($class, $method) = $macro;
                             $function = new \ReflectionMethod(is_object($class) ? get_class($class) : $class, $method);
@@ -168,7 +169,9 @@ class MacrosCommand extends Command
 
             $this->write("$" . $parameter->getName());
             if ($parameter->isOptional()) {
-                $this->write(" = " . var_export($parameter->getDefaultValue(), true));
+                try {
+                    $this->write(" = " . var_export($parameter->getDefaultValue(), true));
+                } catch (\ReflectionException $e) {}
             }
 
             $index++;
